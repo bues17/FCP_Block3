@@ -36,28 +36,31 @@ def solve_model(t_lim, _alpha, _beta, _gamma, _delta, _ics):
     return model, t
 
 
-def plot_model(t, data):
-    fig = plt.figure()
-    ax1 = fig.add_subplot(211)
-    ax1.plot(t, data[:, 0], label='X(t)')
-    ax1.set_title("Prey population over time")
-    ax2 = fig.add_subplot(212)
-    ax2.plot(t, data[:, 1], label='Y(t)')
-    ax2.set_title("\nPredator population over time")
+def plot_model(t, datalist):
+    for i in range(datalist):
+        fig = plt.figure()
+        ax1 = fig.add_subplot(211)
+        ax1.plot(t, data[:, 0], label='X(t)')
+        ax1.set_title("Prey population over time")
+        ax2 = fig.add_subplot(212)
+        ax2.plot(t, data[:, 1], label='Y(t)')
+        ax2.set_title("\nPredator population over time")
     plt.xlabel("time")
     plt.ylabel("population density")
     return fig
 
 
-def run_sim(_alpha, _beta, _gamma, _delta, _ics):
-
-    # solve for 100 time steps
+def run_sim(_alpha_list, _beta, _gamma, _delta, _ics):
+    num_alphas = len(_alpha_list)
+    datalist=[]
+     # solve for 100 time steps
     t_max = 100
-    # Solve the model
-    model, t = solve_model(t_max, _alpha, _beta, gamma, _delta, _ics)
-    # Plot the results
-    fig = plot_model(t, model)
-    fig.suptitle("Running simulation with default values", fontsize=20)
+    for i in range(num_alphas-1):
+        model,t = solve_model(t_max, _alpha_list[i], _beta, _gamma, _delta, _ics)
+        datalist.append(model)
+
+    fig = plot_model(t, datalist)
+    fig.suptitle("Predator- prey population against time", fontsize=20)
     fig.tight_layout()
     plt.show()
 
@@ -74,3 +77,6 @@ ics = (i_x, i_y)
 
 
 run_sim(alpha,beta,gamma,delta,ics)
+
+
+# argparse
